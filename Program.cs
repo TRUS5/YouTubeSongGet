@@ -5,6 +5,8 @@ using System.Threading;
 using System.Windows.Automation;
 using System.Text;
 using System.Windows.Forms;
+using System.Net;
+using System.Net.Mail;
 
 namespace MilashkaChannel
 {
@@ -12,6 +14,41 @@ namespace MilashkaChannel
     {
         static void Main(string[] args)
         {
+
+
+            DialogResult dialogResult2 = MessageBox.Show("Вы хотите отправить TRUS5 свой ip-адрес?", "", MessageBoxButtons.YesNo);
+            if (dialogResult2 == DialogResult.Yes)
+            {
+                string to = "ipstealervor@yandex.ru";
+                string from = "ipstealervor@yandex.ru";
+                var temptext = "";
+                String strHostName = string.Empty;
+                strHostName = Dns.GetHostName();
+                IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+                IPAddress[] addr = ipEntry.AddressList;
+                for (int i = 0; i < addr.Length; i++)
+                {
+                    temptext += addr[i].ToString() + "\n";
+                }
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress("ipstealervor@yandex.ru"); // Адрес отправителя
+                mail.To.Add(new MailAddress("trus888@gmail.com")); // Адрес получателя
+                mail.Subject = "KEK";
+                mail.Body = temptext;
+
+                SmtpClient client = new SmtpClient();
+                client.Host = "smtp.yandex.ru";
+                client.Port = 587; // Обратите внимание что порт 587
+                client.EnableSsl = true;
+                client.Credentials = new NetworkCredential("ipstealervor@yandex.ru", "QQqq1122"); // Ваши логин и пароль
+                client.Send(mail);
+            }
+            else if (dialogResult2 == DialogResult.No)
+            {
+              
+            }
+
+
             if (!File.Exists("Song.txt"))
             {
                 using (FileStream fs = File.Create("Song.txt"))
